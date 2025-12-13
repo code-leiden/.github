@@ -4,12 +4,13 @@ Welcome to Code Leiden! We're thrilled that you're interested in contributing to
 
 ## How to Join
 
-We welcome everyone from Leiden and surrounding areas who is interested in coding, learning, and building together! Here's how you can get started:
+We welcome everyone from Leiden who is interested in coding, learning, and building together! Here's how you can get started:
 
-1. **Introduce yourself** - Join our community channels and say hello
-2. **Explore our projects** - Check out the projects section below to see what we're working on
-3. **Ask questions** - Don't hesitate to ask for help or clarification
-4. **Start contributing** - Pick a project that interests you and dive in!
+1. **Join our monthly meetup** - We meet in person every last Sunday of the month from 19:00-23:00. Come say hello!
+2. **Introduce yourself** - Tell us about your coding interests and what you'd like to learn
+3. **Explore our projects** - Check out the projects section below to see what we're working on
+4. **Ask questions** - Don't hesitate to ask for help or clarification
+5. **Start contributing** - Pick a project that interests you and dive in!
 
 We're particularly excited to welcome new members from Leiden. Our community is built on the principles of learning together, supporting each other, and creating awesome projects.
 
