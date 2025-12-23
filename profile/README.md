@@ -1,6 +1,6 @@
 # Code Leiden - Coding Club Community
 
-![Code Leiden Logo](https://avatars.githubusercontent.com/u/193419734?s=200&v=4)
+![Code Leiden Logo](https://avatars.githubusercontent.com/u/249443089?s=200&v=4)
 
 Welcome to **Code Leiden**! 🎉
 
