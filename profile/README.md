@@ -1,14 +1,13 @@
-# Code Leiden - Coding Club Community
-
+# Code Club Leiden
 ![Code Leiden Logo](https://avatars.githubusercontent.com/u/249443089?s=200&v=4)
 
-Welcome to **Code Leiden**! 🎉
+Welcome to **Code Club Leiden**! 🎉
 
 We are a vibrant coding club based in Leiden, bringing together developers, learners, and technology enthusiasts from all backgrounds and skill levels. Whether you're just starting your coding journey or you're an experienced developer looking to collaborate on exciting projects, we're excited to have you here!
 
 ## Who We Are
 
-Code Leiden is a community-driven coding club that believes in learning together, sharing knowledge, and building amazing projects. We welcome everyone from Leiden who shares a passion for coding and technology.
+Code Club Leiden is a community-driven coding club that believes in learning together, sharing knowledge, and building amazing projects. We welcome everyone from Leiden who shares a passion for coding and technology.
 
 ## Join Our Community
 
