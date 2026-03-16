@@ -165,25 +165,6 @@
       </div>
     </section>
 
-    <!-- ── HEADER ──────────────────────────────────────────────── -->
-    <header class="flex items-center justify-between py-[22px] border-b border-cyan/15">
-      <a href="/" class="flex items-center gap-3 no-underline">
-        <img
-          src="https://avatars.githubusercontent.com/u/249443089?s=200&v=4"
-          alt="Code Club Leiden"
-          class="w-[34px] h-[34px] rounded-[7px] drop-shadow-[0_0_6px_rgba(0,229,255,0.5)]"
-        >
-        <span class="font-mono font-bold text-[13px] text-cyan tracking-[0.04em]">code-club-leiden</span>
-      </a>
-      <nav class="hidden sm:flex gap-1">
-        <a href="#about"  class="font-mono text-[11px] text-muted px-[11px] py-[6px] rounded-md border border-transparent hover:text-cyan hover:border-cyan/15 transition-colors">about</a>
-        <a href="#meetup" class="font-mono text-[11px] text-muted px-[11px] py-[6px] rounded-md border border-transparent hover:text-cyan hover:border-cyan/15 transition-colors">meetups</a>
-        <a href="https://github.com/code-leiden" target="_blank" rel="noopener"
-           class="font-mono text-[11px] text-muted px-[11px] py-[6px] rounded-md border border-transparent hover:text-cyan hover:border-cyan/15 transition-colors">github</a>
-      </nav>
-    </header>
-
-
     <!-- ── DIVIDER ──────────────────────────────────────────────── -->
     <div id="about" class="flex items-center gap-4 my-14">
       <div class="flex-1 h-px bg-cyan/15"></div>
@@ -230,6 +211,31 @@
       <div class="flex-1 h-px bg-cyan/15"></div>
     </div>
 
+    <!-- ── MEETUP CTA ─────────────────────────────────────────────── -->
+    <div id="meetup" class="relative bg-card2 border border-cyan/15 rounded-2xl px-8 py-11 text-center overflow-hidden mb-14">
+      <!-- Spinning conic gradient -->
+      <div class="absolute -top-[60%] -left-[60%] w-[220%] h-[220%] animate-spin pointer-events-none"
+           style="background: conic-gradient(from 0deg, transparent 0deg, rgba(0,229,255,.03) 60deg, transparent 120deg, rgba(255,45,120,.03) 180deg, transparent 240deg, rgba(123,47,255,.03) 300deg, transparent 360deg)">
+      </div>
+
+      <div class="relative z-10">
+        <div class="font-mono text-[10px] tracking-[0.18em] uppercase text-pink mb-[14px]">// next meetup</div>
+        <div class="text-[clamp(22px,4vw,32px)] font-bold mb-2">Come hang out with us 🚀</div>
+        <div class="font-mono text-[13px] text-cyan mb-7">Every last Sunday · 19:00–22:00 · Leiden</div>
+
+        <div class="flex flex-wrap gap-3 justify-center">
+          <a href="https://github.com/code-leiden" target="_blank" rel="noopener"
+             class="btn-cyan inline-flex items-center gap-2 font-mono font-bold text-[13px] px-[22px] py-[13px] rounded-lg bg-cyan text-bg transition-transform duration-100 hover:-translate-y-0.5 active:translate-y-[3px] select-none">
+            ⚡ Get involved
+          </a>
+          <a href="https://github.com/code-leiden" target="_blank" rel="noopener"
+             class="btn-pink inline-flex items-center gap-2 font-mono font-bold text-[13px] px-[22px] py-[13px] rounded-lg bg-pink text-white transition-transform duration-100 hover:-translate-y-0.5 active:translate-y-[3px] select-none">
+            📋 Contributing guide
+          </a>
+        </div>
+      </div>
+    </div>
+
     <!-- ── INFO TABLE ────────────────────────────────────────────── -->
     <div class="bg-card border border-cyan/15 rounded-xl overflow-hidden mb-14">
 
@@ -259,30 +265,6 @@
 
     </div>
 
-    <!-- ── MEETUP CTA ─────────────────────────────────────────────── -->
-    <div id="meetup" class="relative bg-card2 border border-cyan/15 rounded-2xl px-8 py-11 text-center overflow-hidden mb-14">
-      <!-- Spinning conic gradient -->
-      <div class="absolute -top-[60%] -left-[60%] w-[220%] h-[220%] animate-spin pointer-events-none"
-           style="background: conic-gradient(from 0deg, transparent 0deg, rgba(0,229,255,.03) 60deg, transparent 120deg, rgba(255,45,120,.03) 180deg, transparent 240deg, rgba(123,47,255,.03) 300deg, transparent 360deg)">
-      </div>
-
-      <div class="relative z-10">
-        <div class="font-mono text-[10px] tracking-[0.18em] uppercase text-pink mb-[14px]">// next meetup</div>
-        <div class="text-[clamp(22px,4vw,32px)] font-bold mb-2">Come hang out with us 🚀</div>
-        <div class="font-mono text-[13px] text-cyan mb-7">Every last Sunday · 19:00–22:00 · Leiden</div>
-
-        <div class="flex flex-wrap gap-3 justify-center">
-          <a href="https://github.com/code-leiden" target="_blank" rel="noopener"
-             class="btn-cyan inline-flex items-center gap-2 font-mono font-bold text-[13px] px-[22px] py-[13px] rounded-lg bg-cyan text-bg transition-transform duration-100 hover:-translate-y-0.5 active:translate-y-[3px] select-none">
-            ⚡ Get involved
-          </a>
-          <a href="https://github.com/code-leiden" target="_blank" rel="noopener"
-             class="btn-pink inline-flex items-center gap-2 font-mono font-bold text-[13px] px-[22px] py-[13px] rounded-lg bg-pink text-white transition-transform duration-100 hover:-translate-y-0.5 active:translate-y-[3px] select-none">
-            📋 Contributing guide
-          </a>
-        </div>
-      </div>
-    </div>
 
     <!-- ── DIVIDER ──────────────────────────────────────────────── -->
     <div class="flex items-center gap-4 my-14">
