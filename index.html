@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,752 +9,334 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            bg:      '#07091a',
+            card:    '#0c1028',
+            card2:   '#0a0d22',
+            cyan:  { DEFAULT: '#00e5ff', dim: '#0099bb' },
+            pink:  { DEFAULT: '#ff2d78', dim: '#991040' },
+            violet:  '#7b2fff',
+            gold:    '#ffd600',
+            ink:     '#dde2f5',
+            muted:   '#3e4870',
+          },
+          fontFamily: {
+            sans: ['"Space Grotesk"', 'sans-serif'],
+            mono: ['"Space Mono"', 'monospace'],
+          },
+          keyframes: {
+            float: {
+              '0%, 100%': { transform: 'translateY(0)' },
+              '50%':      { transform: 'translateY(-9px)' },
+            },
+            spin: {
+              to: { transform: 'rotate(360deg)' },
+            },
+          },
+          animation: {
+            float: 'float 5s ease-in-out infinite',
+            spin:  'spin 22s linear infinite',
+          },
+        },
+      },
+    }
+  </script>
 
   <style>
-    /* ── DESIGN TOKENS ─────────────────────────────────────── */
-    :root {
-      --bg:          #07091a;
-      --bg-card:     #0c1028;
-      --bg-card-2:   #0a0d22;
+    /* ── Scaffold grid (Tailwind-style structural lines) ──────────
+       Three stacked layers that can't be expressed with utilities:
+       1. Regular grid of horizontal + vertical rules
+       2. Radial dots at every intersection
+       3. Column-edge guides pinned via pseudo-elements on .col-guides  */
 
-      /* Logo palette */
-      --cyan:        #00e5ff;
-      --cyan-dim:    #0099bb;
-      --pink:        #ff2d78;
-      --pink-dim:    #991040;
-      --purple:      #7b2fff;
-      --gold:        #ffd600;
-
-      /* Text */
-      --text:        #dde2f5;
-      --text-muted:  #3e4870;
-      --text-dim:    rgba(221,226,245,0.5);
-
-      /* Scaffold lines (Tailwind-inspired) */
-      --grid-sz:     56px;
-      --grid-line:   rgba(0,229,255,0.06);
-      --grid-dot:    rgba(0,229,255,0.14);
-      --col-line:    rgba(0,229,255,0.10);
-
-      /* Borders & shadows */
-      --border:      rgba(0,229,255,0.14);
-      --border-pink: rgba(255,45,120,0.25);
-    }
-
-    /* ── RESET ──────────────────────────────────────────────── */
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    html { scroll-behavior: smooth; }
-    body {
-      font-family: 'Space Grotesk', sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      overflow-x: hidden;
-      min-height: 100vh;
-    }
-
-    /* ── SCAFFOLD GRID (Tailwind-style visible CSS scaffolding) ─ */
-    /*  Three layers:
-        1. Fine regular grid — structural skeleton
-        2. Dot markers at every intersection
-        3. Pinned column-edge guides flanking the content area  */
-
-    .scaffold {
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      z-index: 0;
+    #scaffold {
+      position: fixed; inset: 0; pointer-events: none; z-index: 0;
       background-image:
-        /* horizontal rules */
-        repeating-linear-gradient(
-          0deg,
-          var(--grid-line) 0px, var(--grid-line) 1px,
-          transparent 1px, transparent var(--grid-sz)
-        ),
-        /* vertical rules */
-        repeating-linear-gradient(
-          90deg,
-          var(--grid-line) 0px, var(--grid-line) 1px,
-          transparent 1px, transparent var(--grid-sz)
-        );
+        repeating-linear-gradient(0deg,
+          rgba(0,229,255,0.06) 0, rgba(0,229,255,0.06) 1px,
+          transparent 1px, transparent 56px),
+        repeating-linear-gradient(90deg,
+          rgba(0,229,255,0.06) 0, rgba(0,229,255,0.06) 1px,
+          transparent 1px, transparent 56px);
     }
-
-    /* Intersection dots */
-    .scaffold::before {
+    #scaffold::before {
       content: '';
-      position: absolute;
-      inset: 0;
+      position: absolute; inset: 0;
       background-image:
-        radial-gradient(circle, var(--grid-dot) 0, var(--grid-dot) 1.5px, transparent 2px);
-      background-size: var(--grid-sz) var(--grid-sz);
+        radial-gradient(circle, rgba(0,229,255,0.16) 0, rgba(0,229,255,0.16) 1.5px, transparent 2px);
+      background-size: 56px 56px;
     }
 
-    /* Perspective floor glow (echoes the logo grid) */
-    .scaffold::after {
+    /* Pinned column guides flanking the content wrapper */
+    #col-guides::before,
+    #col-guides::after {
       content: '';
-      position: fixed;
-      bottom: 0; left: 0; right: 0;
-      height: 35vh;
-      background: linear-gradient(
-        to bottom,
-        transparent 0%,
-        rgba(0,229,255,0.025) 100%
-      );
-    }
-
-    /* Ambient glows */
-    .glow {
-      position: fixed;
-      border-radius: 50%;
-      pointer-events: none;
-      z-index: 0;
-    }
-    .glow-a {
-      top: 10%; left: 15%;
-      width: 500px; height: 500px;
-      background: radial-gradient(circle, rgba(0,229,255,0.055) 0%, transparent 70%);
-    }
-    .glow-b {
-      top: 55%; right: 10%;
-      width: 380px; height: 380px;
-      background: radial-gradient(circle, rgba(255,45,120,0.055) 0%, transparent 70%);
-    }
-    .glow-c {
-      top: 35%; left: 55%;
-      width: 280px; height: 280px;
-      background: radial-gradient(circle, rgba(123,47,255,0.04) 0%, transparent 70%);
-    }
-
-    /* ── LAYOUT ─────────────────────────────────────────────── */
-    .wrap {
-      position: relative;
-      z-index: 1;
-      max-width: 820px;
-      margin: 0 auto;
-      padding: 0 28px;
-    }
-
-    /* Column guide lines flanking content (scaffold marker) */
-    .wrap::before,
-    .wrap::after {
-      content: '';
-      position: fixed;
-      top: 0; bottom: 0;
+      position: fixed; top: 0; bottom: 0;
       width: 1px;
-      background: var(--col-line);
+      background: rgba(0,229,255,0.12);
       pointer-events: none;
       z-index: 2;
     }
-    .wrap::before { left: max(calc(50% - 410px), 28px); }
-    .wrap::after  { right: max(calc(50% - 410px), 28px); }
+    #col-guides::before { left:  max(calc(50% - 438px), 28px); }
+    #col-guides::after  { right: max(calc(50% - 438px), 28px); }
 
-    /* ── HEADER ─────────────────────────────────────────────── */
-    header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 22px 0;
-      border-bottom: 1px solid var(--border);
-      position: relative;
-      z-index: 10;
-    }
+    /* 3-D press buttons — two-layer box-shadow can't be expressed
+       as a single Tailwind arbitrary shadow value cleanly          */
+    .btn-cyan  { box-shadow: 0 5px 0 #0099bb, 0 7px 20px rgba(0,229,255,.30); }
+    .btn-cyan:hover  { box-shadow: 0 7px 0 #0099bb, 0 10px 28px rgba(0,229,255,.40); }
+    .btn-cyan:active { box-shadow: 0 2px 0 #0099bb, 0  4px 12px rgba(0,229,255,.20); }
 
-    .logo-link {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      text-decoration: none;
-    }
-    .logo-link img {
-      width: 34px; height: 34px;
-      border-radius: 7px;
-      filter: drop-shadow(0 0 6px rgba(0,229,255,0.5));
-    }
-    .logo-link .logo-text {
-      font-family: 'Space Mono', monospace;
-      font-size: 13px;
-      font-weight: 700;
-      color: var(--cyan);
-      letter-spacing: 0.04em;
-    }
+    .btn-pink  { box-shadow: 0 5px 0 #991040, 0 7px 20px rgba(255,45,120,.30); }
+    .btn-pink:hover  { box-shadow: 0 7px 0 #991040, 0 10px 28px rgba(255,45,120,.40); }
+    .btn-pink:active { box-shadow: 0 2px 0 #991040; }
 
-    nav {
-      display: flex;
-      gap: 4px;
-    }
-    .nav-a {
-      font-family: 'Space Mono', monospace;
-      font-size: 11px;
-      color: var(--text-muted);
-      text-decoration: none;
-      padding: 6px 11px;
-      border-radius: 6px;
-      border: 1px solid transparent;
-      transition: color .15s, border-color .15s;
-    }
-    .nav-a:hover {
-      color: var(--cyan);
-      border-color: var(--border);
-    }
+    .btn-ghost { box-shadow: 0 5px 0 rgba(0,229,255,.08); }
+    .btn-ghost:hover  { box-shadow: 0 7px 0 rgba(0,229,255,.10), 0 10px 24px rgba(0,229,255,.12); }
+    .btn-ghost:active { box-shadow: 0 2px 0 rgba(0,229,255,.06); }
 
-    /* ── HERO ───────────────────────────────────────────────── */
-    .hero {
-      text-align: center;
-      padding: 80px 0 56px;
-      position: relative;
-    }
-
-    .hero-logo {
-      display: block;
-      width: 108px; height: 108px;
-      border-radius: 22px;
-      margin: 0 auto 28px;
+    /* Logo glow */
+    .logo-glow {
       filter:
-        drop-shadow(0 0 22px rgba(0,229,255,0.45))
-        drop-shadow(0 0 52px rgba(255,45,120,0.2));
-      animation: float 5s ease-in-out infinite;
-    }
-    @keyframes float {
-      0%, 100% { transform: translateY(0); }
-      50%       { transform: translateY(-9px); }
-    }
-
-    .tag {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      font-family: 'Space Mono', monospace;
-      font-size: 10px;
-      font-weight: 700;
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
-      color: var(--pink);
-      border: 1px solid var(--border-pink);
-      padding: 4px 10px;
-      border-radius: 4px;
-      margin-bottom: 22px;
-    }
-    .tag::before { content: '//'; color: var(--text-muted); }
-
-    h1 {
-      font-size: clamp(38px, 7vw, 68px);
-      font-weight: 700;
-      line-height: 1.08;
-      letter-spacing: -0.025em;
-      margin-bottom: 18px;
-    }
-    .c { color: var(--cyan); }
-    .p { color: var(--pink); }
-
-    .hero-sub {
-      font-size: 17px;
-      color: var(--text-dim);
-      max-width: 460px;
-      margin: 0 auto 14px;
-      line-height: 1.65;
-    }
-
-    .hero-meta {
-      font-family: 'Space Mono', monospace;
-      font-size: 11px;
-      color: var(--text-muted);
-      margin-bottom: 36px;
-      letter-spacing: 0.03em;
-    }
-    .hero-meta b { color: var(--gold); }
-
-    /* ── BUTTONS (gitingest-inspired chunky 3-D press) ─────── */
-    .btn-row {
-      display: flex;
-      gap: 12px;
-      justify-content: center;
-      flex-wrap: wrap;
-    }
-
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      font-family: 'Space Mono', monospace;
-      font-size: 13px;
-      font-weight: 700;
-      text-decoration: none;
-      padding: 13px 22px;
-      border-radius: 8px;
-      border: none;
-      cursor: pointer;
-      transition: transform .1s, box-shadow .1s;
-      user-select: none;
-      white-space: nowrap;
-    }
-
-    /* Cyan primary — the "chunky" gitingest button */
-    .btn-cyan {
-      background: var(--cyan);
-      color: #07091a;
-      /* bottom shadow = "ground" under the button */
-      box-shadow:
-        0 5px 0 var(--cyan-dim),
-        0 7px 20px rgba(0,229,255,0.30);
-    }
-    .btn-cyan:hover {
-      transform: translateY(-2px);
-      box-shadow:
-        0 7px 0 var(--cyan-dim),
-        0 10px 28px rgba(0,229,255,0.40);
-    }
-    .btn-cyan:active {
-      transform: translateY(3px);
-      box-shadow:
-        0 2px 0 var(--cyan-dim),
-        0 4px 12px rgba(0,229,255,0.20);
-    }
-
-    /* Pink secondary */
-    .btn-pink {
-      background: var(--pink);
-      color: #fff;
-      box-shadow:
-        0 5px 0 var(--pink-dim),
-        0 7px 20px rgba(255,45,120,0.30);
-    }
-    .btn-pink:hover {
-      transform: translateY(-2px);
-      box-shadow:
-        0 7px 0 var(--pink-dim),
-        0 10px 28px rgba(255,45,120,0.40);
-    }
-    .btn-pink:active {
-      transform: translateY(3px);
-      box-shadow:
-        0 2px 0 var(--pink-dim);
-    }
-
-    /* Ghost outline */
-    .btn-ghost {
-      background: transparent;
-      color: var(--text);
-      border: 2px solid var(--border);
-      box-shadow: 0 5px 0 rgba(0,229,255,0.08);
-    }
-    .btn-ghost:hover {
-      transform: translateY(-2px);
-      color: var(--cyan);
-      border-color: var(--cyan);
-      box-shadow:
-        0 7px 0 rgba(0,229,255,0.10),
-        0 10px 24px rgba(0,229,255,0.12);
-    }
-    .btn-ghost:active {
-      transform: translateY(3px);
-      box-shadow: 0 2px 0 rgba(0,229,255,0.06);
-    }
-
-    /* ── DIVIDER ────────────────────────────────────────────── */
-    .divider {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      margin: 60px 0;
-      position: relative;
-      z-index: 1;
-    }
-    .divider-line { flex: 1; height: 1px; background: var(--border); }
-    .divider-label {
-      font-family: 'Space Mono', monospace;
-      font-size: 10px;
-      letter-spacing: 0.12em;
-      color: var(--text-muted);
-    }
-
-    /* ── CARDS ──────────────────────────────────────────────── */
-    .cards {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: 14px;
-      position: relative;
-      z-index: 1;
-    }
-
-    .card {
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 22px 20px;
-      position: relative;
-      overflow: hidden;
-      transition: border-color .2s, transform .2s;
-    }
-    .card::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(135deg, rgba(0,229,255,0.05) 0%, transparent 55%);
-      opacity: 0;
-      transition: opacity .2s;
-    }
-    .card:hover {
-      border-color: var(--cyan);
-      transform: translateY(-3px);
-    }
-    .card:hover::after { opacity: 1; }
-
-    .card-icon { font-size: 26px; margin-bottom: 10px; display: block; }
-    .card-title {
-      font-size: 14px;
-      font-weight: 700;
-      margin-bottom: 7px;
-    }
-    .card-desc {
-      font-size: 12px;
-      color: var(--text-dim);
-      line-height: 1.65;
-    }
-
-    /* ── INFO TABLE ─────────────────────────────────────────── */
-    .info-table {
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      overflow: hidden;
-      position: relative;
-      z-index: 1;
-    }
-
-    .info-row {
-      display: flex;
-      align-items: center;
-      gap: 0;
-      padding: 18px 24px;
-      border-bottom: 1px solid var(--border);
-    }
-    .info-row:last-child { border-bottom: none; }
-    .info-row:hover { background: rgba(0,229,255,0.03); }
-
-    .info-key {
-      font-family: 'Space Mono', monospace;
-      font-size: 10px;
-      letter-spacing: 0.10em;
-      text-transform: uppercase;
-      color: var(--text-muted);
-      min-width: 90px;
-    }
-    .info-sep {
-      width: 1px;
-      height: 20px;
-      background: var(--border);
-      margin: 0 20px;
-      flex-shrink: 0;
-    }
-    .info-val {
-      font-family: 'Space Mono', monospace;
-      font-size: 13px;
-      color: var(--cyan);
-    }
-
-    /* ── MEETUP CTA ─────────────────────────────────────────── */
-    .meetup {
-      position: relative;
-      z-index: 1;
-      background: var(--bg-card-2);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 44px 32px;
-      text-align: center;
-      overflow: hidden;
-    }
-
-    /* Spinning conic gradient backdrop */
-    .meetup::before {
-      content: '';
-      position: absolute;
-      top: -60%; left: -60%;
-      width: 220%; height: 220%;
-      background: conic-gradient(
-        from 0deg,
-        transparent 0deg,
-        rgba(0,229,255,0.03) 60deg,
-        transparent 120deg,
-        rgba(255,45,120,0.03) 180deg,
-        transparent 240deg,
-        rgba(123,47,255,0.03) 300deg,
-        transparent 360deg
-      );
-      animation: spin 22s linear infinite;
-      pointer-events: none;
-    }
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
-
-    .meetup-inner { position: relative; z-index: 1; }
-
-    .meetup-label {
-      font-family: 'Space Mono', monospace;
-      font-size: 10px;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: var(--pink);
-      margin-bottom: 14px;
-    }
-    .meetup-title {
-      font-size: clamp(22px, 4vw, 32px);
-      font-weight: 700;
-      margin-bottom: 8px;
-    }
-    .meetup-time {
-      font-family: 'Space Mono', monospace;
-      font-size: 13px;
-      color: var(--cyan);
-      margin-bottom: 28px;
-    }
-
-    /* ── TERMINAL ───────────────────────────────────────────── */
-    .terminal {
-      position: relative;
-      z-index: 1;
-      background: #040610;
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      overflow: hidden;
-    }
-
-    .term-bar {
-      background: #080c1e;
-      border-bottom: 1px solid var(--border);
-      padding: 10px 14px;
-      display: flex;
-      align-items: center;
-      gap: 7px;
-    }
-    .dot { width: 10px; height: 10px; border-radius: 50%; }
-    .dot-r { background: #ff5f57; }
-    .dot-y { background: #febc2e; }
-    .dot-g { background: #28c840; }
-    .term-bar-title {
-      font-family: 'Space Mono', monospace;
-      font-size: 10px;
-      color: var(--text-muted);
-      margin: 0 auto;
-    }
-
-    .term-body {
-      padding: 20px 22px;
-      font-family: 'Space Mono', monospace;
-      font-size: 12px;
-      line-height: 2;
-    }
-    .t-prompt { color: var(--cyan); }
-    .t-cmd    { color: var(--text); }
-    .t-cmt    { color: var(--text-muted); font-style: italic; }
-    .t-out    { color: var(--text-dim); }
-    .t-ok     { color: #4caf50; }
-    .t-str    { color: var(--pink); }
-    .t-gold   { color: var(--gold); }
-
-    /* ── FOOTER ─────────────────────────────────────────────── */
-    footer {
-      position: relative;
-      z-index: 1;
-      border-top: 1px solid var(--border);
-      padding: 28px 0 36px;
-      text-align: center;
-    }
-    .footer-text {
-      font-family: 'Space Mono', monospace;
-      font-size: 11px;
-      color: var(--text-muted);
-      line-height: 1.8;
-    }
-    .footer-text a {
-      color: var(--cyan);
-      text-decoration: none;
-    }
-    .footer-text a:hover { text-decoration: underline; }
-
-    /* ── SECTION SPACING ────────────────────────────────────── */
-    .section { margin-bottom: 56px; }
-
-    /* ── RESPONSIVE ─────────────────────────────────────────── */
-    @media (max-width: 580px) {
-      .hero { padding: 52px 0 40px; }
-      .hero-logo { width: 84px; height: 84px; }
-      nav { display: none; }
-      .info-row { flex-direction: column; align-items: flex-start; gap: 6px; }
-      .info-sep { display: none; }
-      .meetup { padding: 32px 20px; }
+        drop-shadow(0 0 22px rgba(0,229,255,.45))
+        drop-shadow(0 0 52px rgba(255,45,120,.20));
     }
   </style>
 </head>
-<body>
 
-  <!-- Scaffold layers -->
-  <div class="scaffold"></div>
-  <div class="glow glow-a"></div>
-  <div class="glow glow-b"></div>
-  <div class="glow glow-c"></div>
+<body class="bg-bg text-ink font-sans overflow-x-hidden min-h-screen">
 
-  <div class="wrap">
+  <!-- Scaffold background -->
+  <div id="scaffold"></div>
+  <div id="col-guides"></div>
 
-    <!-- ── HEADER ─────────────────────────────────────────── -->
-    <header>
-      <a href="/" class="logo-link">
-        <img src="https://avatars.githubusercontent.com/u/249443089?s=200&v=4" alt="Code Club Leiden">
-        <span class="logo-text">code-club-leiden</span>
+  <!-- Ambient glows -->
+  <div class="fixed top-[10%] left-[15%] w-[500px] h-[500px] rounded-full pointer-events-none z-0"
+       style="background: radial-gradient(circle, rgba(0,229,255,.055) 0%, transparent 70%)"></div>
+  <div class="fixed top-[55%] right-[10%] w-[380px] h-[380px] rounded-full pointer-events-none z-0"
+       style="background: radial-gradient(circle, rgba(255,45,120,.055) 0%, transparent 70%)"></div>
+  <div class="fixed top-[35%] left-[55%] w-[280px] h-[280px] rounded-full pointer-events-none z-0"
+       style="background: radial-gradient(circle, rgba(123,47,255,.04) 0%, transparent 70%)"></div>
+
+  <!-- ── Page wrapper ────────────────────────────────────────── -->
+  <div class="relative z-10 max-w-[876px] mx-auto px-7">
+
+    <!-- ── HEADER ──────────────────────────────────────────────── -->
+    <header class="flex items-center justify-between py-[22px] border-b border-cyan/15">
+      <a href="/" class="flex items-center gap-3 no-underline">
+        <img
+          src="https://avatars.githubusercontent.com/u/249443089?s=200&v=4"
+          alt="Code Club Leiden"
+          class="w-[34px] h-[34px] rounded-[7px] drop-shadow-[0_0_6px_rgba(0,229,255,0.5)]"
+        >
+        <span class="font-mono font-bold text-[13px] text-cyan tracking-[0.04em]">code-club-leiden</span>
       </a>
-      <nav>
-        <a href="#about"  class="nav-a">about</a>
-        <a href="#meetup" class="nav-a">meetups</a>
-        <a href="https://github.com/code-leiden" class="nav-a" target="_blank" rel="noopener">github</a>
+      <nav class="hidden sm:flex gap-1">
+        <a href="#about"  class="font-mono text-[11px] text-muted px-[11px] py-[6px] rounded-md border border-transparent hover:text-cyan hover:border-cyan/15 transition-colors">about</a>
+        <a href="#meetup" class="font-mono text-[11px] text-muted px-[11px] py-[6px] rounded-md border border-transparent hover:text-cyan hover:border-cyan/15 transition-colors">meetups</a>
+        <a href="https://github.com/code-leiden" target="_blank" rel="noopener"
+           class="font-mono text-[11px] text-muted px-[11px] py-[6px] rounded-md border border-transparent hover:text-cyan hover:border-cyan/15 transition-colors">github</a>
       </nav>
     </header>
 
-    <!-- ── HERO ───────────────────────────────────────────── -->
-    <section class="hero">
+    <!-- ── HERO ────────────────────────────────────────────────── -->
+    <section class="text-center pt-20 pb-14">
       <img
-        class="hero-logo"
         src="https://avatars.githubusercontent.com/u/249443089?s=200&v=4"
         alt="Code Club Leiden Logo"
+        class="logo-glow block w-[108px] h-[108px] rounded-[22px] mx-auto mb-7 animate-float"
       >
-      <div class="tag">Leiden &nbsp;·&nbsp; NL</div>
-      <h1>
+
+      <div class="inline-flex items-center gap-2 font-mono text-[10px] font-bold tracking-[0.16em] uppercase text-pink border border-pink/25 px-[10px] py-[4px] rounded mb-5">
+        <span class="text-muted">//</span> Leiden &nbsp;·&nbsp; NL
+      </div>
+
+      <h1 class="text-[clamp(38px,7vw,68px)] font-bold leading-[1.08] tracking-[-0.025em] mb-[18px]">
         Code together,<br>
-        <span class="c">build</span> together,<br>
-        <span class="p">grow</span> together.
+        <span class="text-cyan">build</span> together,<br>
+        <span class="text-pink">grow</span> together.
       </h1>
-      <p class="hero-sub">
+
+      <p class="text-[17px] text-ink/50 max-w-[460px] mx-auto leading-relaxed mb-[14px]">
         A community of developers and tech enthusiasts in Leiden.
         Every skill level welcome — beginners to pros.
       </p>
-      <p class="hero-meta">
-        <b>Every last Sunday of the month</b> &mdash; 19:00 – 23:00 &mdash; Leiden, NL
+
+      <p class="font-mono text-[11px] text-muted tracking-[0.03em] mb-9">
+        <strong class="text-gold font-bold">Every last Sunday of the month</strong>
+        &mdash; 19:00 – 23:00 &mdash; Leiden, NL
       </p>
-      <div class="btn-row">
-        <a href="#meetup" class="btn btn-cyan">⚡ Join a meetup</a>
-        <a href="https://github.com/code-leiden" class="btn btn-ghost" target="_blank" rel="noopener">⬡ View on GitHub</a>
+
+      <div class="flex flex-wrap gap-3 justify-center">
+        <a href="#meetup"
+           class="btn-cyan inline-flex items-center gap-2 font-mono font-bold text-[13px] px-[22px] py-[13px] rounded-lg bg-cyan text-bg transition-transform duration-100 hover:-translate-y-0.5 active:translate-y-[3px] select-none">
+          ⚡ Join a meetup
+        </a>
+        <a href="https://github.com/code-leiden" target="_blank" rel="noopener"
+           class="btn-ghost inline-flex items-center gap-2 font-mono font-bold text-[13px] px-[22px] py-[13px] rounded-lg bg-transparent text-ink border-2 border-cyan/15 transition-all duration-100 hover:-translate-y-0.5 hover:text-cyan hover:border-cyan active:translate-y-[3px] select-none">
+          ⬡ View on GitHub
+        </a>
       </div>
     </section>
 
-    <!-- ── WHAT WE DO ──────────────────────────────────────── -->
-    <div class="divider" id="about">
-      <div class="divider-line"></div>
-      <span class="divider-label">// what we do</span>
-      <div class="divider-line"></div>
+    <!-- ── DIVIDER ──────────────────────────────────────────────── -->
+    <div id="about" class="flex items-center gap-4 my-14">
+      <div class="flex-1 h-px bg-cyan/15"></div>
+      <span class="font-mono text-[10px] tracking-[0.12em] text-muted">// what we do</span>
+      <div class="flex-1 h-px bg-cyan/15"></div>
     </div>
 
-    <div class="cards section">
-      <div class="card">
-        <span class="card-icon">🛠️</span>
-        <div class="card-title">Build Projects</div>
-        <p class="card-desc">Collaborate on real-world projects across any tech stack — web, mobile, games, tools.</p>
+    <!-- ── CARDS ────────────────────────────────────────────────── -->
+    <div class="grid grid-cols-[repeat(auto-fit,minmax(180px,1fr))] gap-4 mb-14">
+      <!-- Card component — hover lifts + cyan tint bleeds in via ::after on card -->
+      <div class="group relative bg-card border border-cyan/15 rounded-xl p-5 overflow-hidden transition-all duration-200 hover:border-cyan hover:-translate-y-[3px]">
+        <div class="absolute inset-0 bg-gradient-to-br from-cyan/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"></div>
+        <span class="text-[26px] mb-[10px] block">🛠️</span>
+        <div class="text-sm font-bold mb-[7px]">Build Projects</div>
+        <p class="text-xs text-ink/50 leading-relaxed">Collaborate on real-world projects across any tech stack — web, mobile, games, tools.</p>
       </div>
-      <div class="card">
-        <span class="card-icon">🔍</span>
-        <div class="card-title">Code Review</div>
-        <p class="card-desc">Learn best practices through constructive peer feedback. Ship better code together.</p>
-      </div>
-      <div class="card">
-        <span class="card-icon">🎓</span>
-        <div class="card-title">Mentorship</div>
-        <p class="card-desc">Experienced members help newcomers. No question is too small.</p>
-      </div>
-      <div class="card">
-        <span class="card-icon">⚡</span>
-        <div class="card-title">Hackathons</div>
-        <p class="card-desc">Fun coding challenges to sharpen your skills and have a blast.</p>
-      </div>
-    </div>
 
-    <!-- ── MEETUP DETAILS ──────────────────────────────────── -->
-    <div class="divider">
-      <div class="divider-line"></div>
-      <span class="divider-label">// when &amp; where</span>
-      <div class="divider-line"></div>
-    </div>
+      <div class="group relative bg-card border border-cyan/15 rounded-xl p-5 overflow-hidden transition-all duration-200 hover:border-cyan hover:-translate-y-[3px]">
+        <div class="absolute inset-0 bg-gradient-to-br from-cyan/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"></div>
+        <span class="text-[26px] mb-[10px] block">🔍</span>
+        <div class="text-sm font-bold mb-[7px]">Code Review</div>
+        <p class="text-xs text-ink/50 leading-relaxed">Learn best practices through constructive peer feedback. Ship better code together.</p>
+      </div>
 
-    <div class="info-table section">
-      <div class="info-row">
-        <span class="info-key">When</span>
-        <div class="info-sep"></div>
-        <span class="info-val">Last Sunday of every month, 19:00 – 23:00</span>
+      <div class="group relative bg-card border border-cyan/15 rounded-xl p-5 overflow-hidden transition-all duration-200 hover:border-cyan hover:-translate-y-[3px]">
+        <div class="absolute inset-0 bg-gradient-to-br from-cyan/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"></div>
+        <span class="text-[26px] mb-[10px] block">🎓</span>
+        <div class="text-sm font-bold mb-[7px]">Mentorship</div>
+        <p class="text-xs text-ink/50 leading-relaxed">Experienced members help newcomers. No question is too small.</p>
       </div>
-      <div class="info-row">
-        <span class="info-key">Where</span>
-        <div class="info-sep"></div>
-        <span class="info-val">Leiden, Netherlands</span>
-      </div>
-      <div class="info-row">
-        <span class="info-key">Who</span>
-        <div class="info-sep"></div>
-        <span class="info-val">All skill levels — complete beginners to experienced devs</span>
-      </div>
-      <div class="info-row">
-        <span class="info-key">Cost</span>
-        <div class="info-sep"></div>
-        <span class="info-val">Free</span>
+
+      <div class="group relative bg-card border border-cyan/15 rounded-xl p-5 overflow-hidden transition-all duration-200 hover:border-cyan hover:-translate-y-[3px]">
+        <div class="absolute inset-0 bg-gradient-to-br from-cyan/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"></div>
+        <span class="text-[26px] mb-[10px] block">⚡</span>
+        <div class="text-sm font-bold mb-[7px]">Hackathons</div>
+        <p class="text-xs text-ink/50 leading-relaxed">Fun coding challenges to sharpen your skills and have a blast.</p>
       </div>
     </div>
 
-    <!-- ── MEETUP CTA ──────────────────────────────────────── -->
-    <div class="meetup section" id="meetup">
-      <div class="meetup-inner">
-        <div class="meetup-label">// next meetup</div>
-        <div class="meetup-title">Come hang out with us 🚀</div>
-        <div class="meetup-time">Every last Sunday · 19:00–23:00 · Leiden</div>
-        <div class="btn-row">
-          <a href="https://github.com/code-leiden" class="btn btn-cyan" target="_blank" rel="noopener">⚡ Get involved</a>
-          <a href="https://github.com/code-leiden" class="btn btn-pink" target="_blank" rel="noopener">📋 Contributing guide</a>
+    <!-- ── DIVIDER ──────────────────────────────────────────────── -->
+    <div class="flex items-center gap-4 my-14">
+      <div class="flex-1 h-px bg-cyan/15"></div>
+      <span class="font-mono text-[10px] tracking-[0.12em] text-muted">// when &amp; where</span>
+      <div class="flex-1 h-px bg-cyan/15"></div>
+    </div>
+
+    <!-- ── INFO TABLE ────────────────────────────────────────────── -->
+    <div class="bg-card border border-cyan/15 rounded-xl overflow-hidden mb-14">
+
+      <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-0 px-6 py-[18px] border-b border-cyan/15 hover:bg-cyan/[0.03] transition-colors">
+        <span class="font-mono text-[10px] uppercase tracking-[0.10em] text-muted min-w-[90px]">When</span>
+        <div class="hidden sm:block w-px h-5 bg-cyan/15 mx-5 shrink-0"></div>
+        <span class="font-mono text-[13px] text-cyan">Last Sunday of every month, 19:00 – 23:00</span>
+      </div>
+
+      <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-0 px-6 py-[18px] border-b border-cyan/15 hover:bg-cyan/[0.03] transition-colors">
+        <span class="font-mono text-[10px] uppercase tracking-[0.10em] text-muted min-w-[90px]">Where</span>
+        <div class="hidden sm:block w-px h-5 bg-cyan/15 mx-5 shrink-0"></div>
+        <span class="font-mono text-[13px] text-cyan">Leiden, Netherlands</span>
+      </div>
+
+      <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-0 px-6 py-[18px] border-b border-cyan/15 hover:bg-cyan/[0.03] transition-colors">
+        <span class="font-mono text-[10px] uppercase tracking-[0.10em] text-muted min-w-[90px]">Who</span>
+        <div class="hidden sm:block w-px h-5 bg-cyan/15 mx-5 shrink-0"></div>
+        <span class="font-mono text-[13px] text-cyan">All skill levels — complete beginners to experienced devs</span>
+      </div>
+
+      <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-0 px-6 py-[18px] hover:bg-cyan/[0.03] transition-colors">
+        <span class="font-mono text-[10px] uppercase tracking-[0.10em] text-muted min-w-[90px]">Cost</span>
+        <div class="hidden sm:block w-px h-5 bg-cyan/15 mx-5 shrink-0"></div>
+        <span class="font-mono text-[13px] text-cyan">Free</span>
+      </div>
+
+    </div>
+
+    <!-- ── MEETUP CTA ─────────────────────────────────────────────── -->
+    <div id="meetup" class="relative bg-card2 border border-cyan/15 rounded-2xl px-8 py-11 text-center overflow-hidden mb-14">
+      <!-- Spinning conic gradient -->
+      <div class="absolute -top-[60%] -left-[60%] w-[220%] h-[220%] animate-spin pointer-events-none"
+           style="background: conic-gradient(from 0deg, transparent 0deg, rgba(0,229,255,.03) 60deg, transparent 120deg, rgba(255,45,120,.03) 180deg, transparent 240deg, rgba(123,47,255,.03) 300deg, transparent 360deg)">
+      </div>
+
+      <div class="relative z-10">
+        <div class="font-mono text-[10px] tracking-[0.18em] uppercase text-pink mb-[14px]">// next meetup</div>
+        <div class="text-[clamp(22px,4vw,32px)] font-bold mb-2">Come hang out with us 🚀</div>
+        <div class="font-mono text-[13px] text-cyan mb-7">Every last Sunday · 19:00–23:00 · Leiden</div>
+
+        <div class="flex flex-wrap gap-3 justify-center">
+          <a href="https://github.com/code-leiden" target="_blank" rel="noopener"
+             class="btn-cyan inline-flex items-center gap-2 font-mono font-bold text-[13px] px-[22px] py-[13px] rounded-lg bg-cyan text-bg transition-transform duration-100 hover:-translate-y-0.5 active:translate-y-[3px] select-none">
+            ⚡ Get involved
+          </a>
+          <a href="https://github.com/code-leiden" target="_blank" rel="noopener"
+             class="btn-pink inline-flex items-center gap-2 font-mono font-bold text-[13px] px-[22px] py-[13px] rounded-lg bg-pink text-white transition-transform duration-100 hover:-translate-y-0.5 active:translate-y-[3px] select-none">
+            📋 Contributing guide
+          </a>
         </div>
       </div>
     </div>
 
-    <!-- ── TERMINAL ────────────────────────────────────────── -->
-    <div class="divider">
-      <div class="divider-line"></div>
-      <span class="divider-label">// getting started</span>
-      <div class="divider-line"></div>
+    <!-- ── DIVIDER ──────────────────────────────────────────────── -->
+    <div class="flex items-center gap-4 my-14">
+      <div class="flex-1 h-px bg-cyan/15"></div>
+      <span class="font-mono text-[10px] tracking-[0.12em] text-muted">// getting started</span>
+      <div class="flex-1 h-px bg-cyan/15"></div>
     </div>
 
-    <div class="terminal section">
-      <div class="term-bar">
-        <div class="dot dot-r"></div>
-        <div class="dot dot-y"></div>
-        <div class="dot dot-g"></div>
-        <span class="term-bar-title">getting-started.sh</span>
+    <!-- ── TERMINAL ───────────────────────────────────────────────── -->
+    <div class="bg-[#040610] border border-cyan/15 rounded-xl overflow-hidden mb-14">
+
+      <!-- Title bar -->
+      <div class="flex items-center gap-[7px] px-[14px] py-[10px] bg-[#080c1e] border-b border-cyan/15">
+        <div class="w-[10px] h-[10px] rounded-full bg-[#ff5f57]"></div>
+        <div class="w-[10px] h-[10px] rounded-full bg-[#febc2e]"></div>
+        <div class="w-[10px] h-[10px] rounded-full bg-[#28c840]"></div>
+        <span class="font-mono text-[10px] text-muted mx-auto">getting-started.sh</span>
       </div>
-      <div class="term-body">
-        <div><span class="t-cmt"># Welcome to Code Club Leiden</span></div>
+
+      <!-- Body -->
+      <div class="p-5 font-mono text-[12px] leading-[2]">
+        <div class="text-muted italic"># Welcome to Code Club Leiden</div>
         <div>&nbsp;</div>
         <div>
-          <span class="t-prompt">$ </span>
-          <span class="t-cmd">git clone https://github.com/code-leiden</span>
+          <span class="text-cyan">$ </span>
+          <span class="text-ink">git clone https://github.com/code-leiden</span>
         </div>
-        <div class="t-out">Cloning into 'code-leiden'...</div>
-        <div><span class="t-ok">✓</span> <span class="t-out">Cloned successfully</span></div>
+        <div class="text-ink/50">Cloning into 'code-leiden'...</div>
+        <div><span class="text-[#4caf50]">✓</span> <span class="text-ink/50">Cloned successfully</span></div>
         <div>&nbsp;</div>
         <div>
-          <span class="t-prompt">$ </span>
-          <span class="t-cmd">cat WELCOME.md</span>
+          <span class="text-cyan">$ </span>
+          <span class="text-ink">cat WELCOME.md</span>
         </div>
-        <div class="t-out">New members from Leiden are always welcome! 🌟</div>
-        <div class="t-out">Meet every last Sunday of the month.</div>
+        <div class="text-ink/50">New members from Leiden are always welcome! 🌟</div>
+        <div class="text-ink/50">Meet every last Sunday of the month.</div>
         <div>&nbsp;</div>
         <div>
-          <span class="t-prompt">$ </span>
-          <span class="t-cmd">echo <span class="t-str">"Let's build something amazing"</span></span>
+          <span class="text-cyan">$ </span>
+          <span class="text-ink">echo <span class="text-pink">"Let's build something amazing"</span></span>
         </div>
-        <div><span class="t-gold">Let's build something amazing</span></div>
+        <div class="text-gold">Let's build something amazing</div>
       </div>
+
     </div>
 
-    <!-- ── FOOTER ──────────────────────────────────────────── -->
-    <footer>
-      <p class="footer-text">
+    <!-- ── FOOTER ─────────────────────────────────────────────────── -->
+    <footer class="border-t border-cyan/15 py-7 text-center mb-4">
+      <p class="font-mono text-[11px] text-muted leading-[1.8]">
         &copy; 2025 Code Club Leiden &nbsp;·&nbsp;
-        <a href="https://github.com/code-leiden" target="_blank" rel="noopener">github.com/code-leiden</a>
+        <a href="https://github.com/code-leiden" target="_blank" rel="noopener" class="text-cyan hover:underline">github.com/code-leiden</a>
         &nbsp;·&nbsp; Made with ❤️ in Leiden
       </p>
     </footer>
 
-  </div><!-- /wrap -->
+  </div><!-- /wrapper -->
 </body>
 </html>
